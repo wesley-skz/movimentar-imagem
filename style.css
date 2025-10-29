@@ -1,26 +1,46 @@
 /* style.css */
 
-/* Estilos do Contêiner */
-#container {
-    width: 100vw;
-    height: 100vh;
-    border: 2px dashed #ccc;
-    overflow: hidden; 
-    position: relative; /* Pai do elemento móvel precisa ser relative */
-    background-color: #f0f0f0;
+/* Estilos básicos */
+body {
+    margin: 0;
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f4f4f4;
 }
 
-/* Estilos da Imagem/Elemento Móvel */
-#imagemMovel {
-    width: 50px; 
-    height: 50px;
-    background-color: red; /* Simula a imagem */
-    /* Se for usar uma imagem real:
-    background-image: url('caminho/para/sua/imagem.png');
-    background-size: cover;
-    */
-    position: absolute; /* MUITO IMPORTANTE para o movimento (top/left) */
-    top: 50px;    /* Posição inicial Y */
-    left: 50px;   /* Posição inicial X */
-    transition: top 0.1s linear, left 0.1s linear; /* Suaviza o movimento */
+/* O Contêiner / Área do Jogo */
+#game-area {
+    width: 90vw;
+    height: 70vh;
+    border: 3px solid #333;
+    background-color: #fff;
+    position: relative; 
+    overflow: hidden; 
+}
+
+/* O Elemento Móvel (Sua Imagem) */
+#movable-element {
+    width: 60px; 
+    height: 60px;
+    position: absolute; 
+    
+    top: 20px;
+    left: 20px;
+    
+    /* Removemos a transição CSS que suavizava os movimentos manuais, 
+       mas você pode deixar se quiser que o movimento automático seja mais suave! */
+    /* transition: top 0.08s linear, left 0.08s linear; */
+
+    /* COMO INSERIR SUA IMAGEM: */
+    background-color: dodgerblue; /* Cor de fundo (temporária) */
+    /* background-image: url('nome-da-sua-imagem.png'); */
+    /* background-size: cover; */
+}
+
+footer {
+    margin-top: 20px;
 }
