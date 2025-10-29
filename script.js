@@ -1,43 +1,63 @@
 // script.js
 
-const imagem = document.getElementById('imagemMovel');
-const passo = 10; // Quantidade de pixels que a imagem se moverá a cada tecla
-let posicaoX = 50; // Posição inicial X (sincronizar com o CSS)
-let posicaoY = 50; // Posição inicial Y (sincronizar com o CSS)
+const elemento = document.getElementById('movable-element');
+const STEP_SIZE = 5; // Velocidade de movimento (pixels por "passo")
+const INTERVAL_MS = 50; // Intervalo de repetição (em milissegundos). 
+                        // Um valor menor torna o movimento mais rápido e fluido.
 
-// Função para atualizar a posição da imagem no DOM
-function atualizarPosicao() {
-    // Define as propriedades CSS 'top' e 'left'
-    imagem.style.top = `${posicaoY}px`;
-    imagem.style.left = `${posicaoX}px`;
+// Variáveis de posição e direção
+let currentX = 20; 
+let currentY = 20;
+let directionX = 1; // 1 para direita, -1 para esquerda
+let directionY = 1; // 1 para baixo, -1 para cima
+
+// 1. Função para aplicar a nova posição ao CSS
+function applyPosition() {
+    elemento.style.left = `${currentX}px`;
+    elemento.style.top = `${currentY}px`;
 }
 
-// Adiciona um "listener" para capturar as teclas pressionadas
-document.addEventListener('keydown', (evento) => {
-    // Verifica qual tecla foi pressionada
-    switch (evento.key) {
-        case 'ArrowUp': // Seta para cima
-            posicaoY -= passo;
-            break;
-        case 'ArrowDown': // Seta para baixo
-            posicaoY += passo;
-            break;
-        case 'ArrowLeft': // Seta para a esquerda
-            posicaoX -= passo;
-            break;
-        case 'ArrowRight': // Seta para a direita
-            posicaoX += passo;
-            break;
-        default:
-            return; // Sai da função se não for uma tecla de seta
+// 2. Função principal que calcula o movimento a cada intervalo
+function updateMovement() {
+    // ------------------------------------------
+    // Lógica para que o elemento bata e volte (Movimento de "ping-pong")
+    // ------------------------------------------
+    
+    const container = document.getElementById('game-area');
+    const containerWidth = container.clientWidth;
+    const containerHeight = container.clientHeight;
+    const elementSize = 60; // Tamanho do seu elemento (60px conforme CSS)
+
+    // Movimento Horizontal (X)
+    currentX += directionX * STEP_SIZE;
+    
+    // Verifica se atingiu a borda direita ou esquerda
+    if (currentX + elementSize > containerWidth || currentX < 0) {
+        directionX *= -1; // Inverte a direção horizontal
+        // Ajusta a posição para que não fique "preso" na borda
+        if (currentX < 0) currentX = 0;
+        if (currentX + elementSize > containerWidth) currentX = containerWidth - elementSize;
     }
 
-    // Impede o comportamento padrão do navegador (como rolar a tela com as setas)
-    evento.preventDefault();
+    // Movimento Vertical (Y)
+    currentY += directionY * STEP_SIZE;
 
-    // Chama a função para aplicar a nova posição
-    atualizarPosicao();
-});
+    // Verifica se atingiu a borda inferior ou superior
+    if (currentY + elementSize > containerHeight || currentY < 0) {
+        directionY *= -1; // Inverte a direção vertical
+        // Ajusta a posição para que não fique "preso" na borda
+        if (currentY < 0) currentY = 0;
+        if (currentY + elementSize > containerHeight) currentY = containerHeight - elementSize;
+    }
 
-// Garante que a posição inicial do JS e CSS estejam sincronizadas
-atualizarPosicao();
+    // Aplica as novas coordenadas
+    applyPosition();
+}
+
+// 3. Inicia o loop de animação
+// O setInterval chama a função 'updateMovement' repetidamente no intervalo definido.
+// Isto cria a ilusão de movimento contínuo.
+setInterval(updateMovement, INTERVAL_MS);
+
+// Aplica a posição inicial
+applyPosition();
